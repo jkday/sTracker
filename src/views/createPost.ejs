@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel='stylesheet' href='../stylesheets/style.css' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/javascript/createPost.js"></script>
+
+</head>
+
+<body>
+    <form id='postForm' style="width:500px" action='/userProfile/postMgr/upload' method="post" enctype="multipart/form-data" onsubmit="submitRequest(this); return false;">
+        <fieldset>
+            <legend>New Post Settings</legend>
+            <br>Service Type:
+            <select id="social_sites" name='service_type'>
+                <option value="Web Blog">Web Blog</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">FaceBook</option>
+                <option value="Email">Email</option>
+              </select>
+            <br>
+            <br>Title: <input type="text" name="title" size=60>
+            <br>Caption: <br><textarea name="caption" cols="60" rows="10"></textarea>
+            <br>
+            <br>Select Images: <input type="file" id="uploader" name="uploadPhotos" multiple>
+            <div id='preview_imgs' style='display: none;width:40%'></div>
+            <br>
+            <br><input type="submit" value="Submit">
+
+        </fieldset>
+    </form>
+    <script>
+        function showFiles() {
+            var fileList = this.files;
+            const showBlock = document.getElementById("preview_imgs");
+
+            if (!fileList.length) {
+                showBlock.innerHTML = "<p>No files selected!</p>";
+            } else {
+
+                //clear the image preview list 1st
+                while (showBlock.firstElementChild) {
+                    showBlock.removeChild(showBlock.lastElementChild);
+                }
+
+                for (let j = 0; j < fileList.length; j++) {
+                    console.log("working on file: " + fileList[j].name);
+                    const div = document.createElement("div");
+                    const img = document.createElement("img");
+                    img.src = URL.createObjectURL(fileList[j]);
+                    console.log("URL: " + img.src);
+                    img.height = 60;
+                    img.onload = function() {
+                        URL.revokeObjectURL(this.src);
+                    }
+                    div.appendChild(img);
+                    const info = document.createElement("span");
+                    info.innerText = fileList[j].name + ": " + fileList[j].size + " bytes";
+                    info.innerText = fileList[j].size + " bytes ";
+
+                    div.appendChild(info);
+                    div.style.display = 'block';
+                    showBlock.appendChild(div);
+
+
+                }
+                showBlock.style.display = "inline-block";
+
+
+            }
+
+        }
+
+        function submitRequest(formElem) {
+            if (!formElem.action) {
+                return;
+            }
+            var oXHR = new XMLHttpRequest();
+            oXHR.onload = function() {
+                console.log(this.responseText);
+            };
+            console.log("form Action: " + formElem.action);
+
+            if (formElem.method.toUpperCase() === "POST") {
+
+                for (x in formElem.elements) {
+                    console.log(x.toString() + ": " + formElem.elements[x])
+
+                }
+                //return;
+
+                oXHR.open("post", formElem.action);
+                oXHR.send(new FormData(formElem));
+
+                //clear out div w/ temp pics after post submission
+                const preview = document.getElementById("preview_imgs");
+                //clearing innerHTML is shorter code but inovkeds HTML parser
+                while (preview.firstElementChild) {
+                    preview.removeChild(preview.lastElementChild);
+                }
+
+            } else { //should never use a 'GET' but just in case put data on a querystring
+                var oField, sFieldType, nFile, sSearch = "";
+                for (var nItem = 0; nItem < formElem.elements.length; nItem++) {
+                    oField = formElem.elements[nItem];
+                    if (!oField.hasAttribute("name")) {
+                        continue;
+                    }
+                    sFieldType = oField.nodeName.toUpperCase() === "INPUT" ?
+                        oField.getAttribute("type").toUpperCase() : "TEXT";
+                    if (sFieldType === "FILE") {
+                        for (nFile = 0; nFile < oField.files.length; sSearch += "&" + encodeURI(oField.name) + "=" + encodeURI(oField.files[nFile++].name));
+                    } else if ((sFieldType !== "RADIO" && sFieldType !== "CHECKBOX") || oField.checked) {
+                        sSearch += "&" + encodeURI(oField.name) + "=" + encodeURI(oField.value);
+                    }
+                }
+                oXHR.open("get", formElem.action.replace(/(?:\?.*)?$/, sSearch.replace(/^&/, "?")), true);
+                oXHR.send(null);
+
+            }
+
+
+        }
+
+
+        document.getElementById("uploader").addEventListener("change", showFiles, false);;
+    </script>
+</body>
+
+
+</html>

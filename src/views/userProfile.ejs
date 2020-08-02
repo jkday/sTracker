@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <!--  <title>Learn About Me</title> -->
+    <% if(title){ %>
+        <title>
+            <%= title %>
+        </title>
+        <% } %>
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+            <link rel='stylesheet' href='../stylesheets/style.css' />
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+            <script type="text/javascript" src="/javascript/userProfile.js"></script>
+
+            <!-- <script src="API/JQuery/jquery-3.4.1.min.js"></script>
+         <script src="API/jquery-ui-1.12.1/jquery-ui.js"></script>
+        
+            <script type="text/javascript" src="/javascript/login.js"></script>
+            
+            <script type="text/javascript" src="/javascript/userProfile.js"></script>
+
+        -->
+
+</head>
+
+<body>
+
+    <!-- navbar section -->
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+
+        <div class="container">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Learn About Me</a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <% if (currentUser) { %>
+
+                    <li>
+                        <a href="/edit">
+                            Hello, <%= currentUser.name()%>
+                            </a>
+                    </li>
+                    <li><a href="/logout">Log out</a></li>
+
+                    <% } else { %>
+                        <li><a href="/login">Log in</a></li>
+                        <li><a href="/signup">Sign up</a></li>
+                        <li><a href="/signup">Blog Posts</a></li>
+                        <li><a href="/signup">IG Posts</a></li>
+                        <li><a href="/signup">FB Posts</a></li>
+                        <% } %>
+
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- navbar default -->
+
+
+    <div class="container">
+        <% errors.forEach(function(error) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
+            </div>
+            <% }) %>
+                <% infos.forEach(function(info) { %>
+                    <div class="alert alert-info" role="alert">
+                        <%= info %>
+                    </div>
+                    <% }) %>
+
+    </div>
+
+
+
+    <!-- endof navbar -->
+
+
+    <div id='userLogin' class='modal' style='background-color: red'>
+        <p> User Login Page</p>
+    </div>
+    <div id='placeholder' style='margin:10px'>
+        <h2>Write Something Cool here!</h2>
+
+
+        <div id="newPostWin" style='display: inline-block;text-align:left;border-style: solid;border-width:1px;border-color: red;'>
+            <label for="psites">Choose a site:</label>
+            <select id="psites"> <!-- post sites-->
+                <option value="Web Blog">Web Blog</option>
+                <option value="IG">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="All">All</option>
+              </select>
+            <br>
+            <button> Create New Post</button>
+            <!-- open a new window with a form to submit a caption and add files-->
+
+
+        </div>
+
+        <!-- 
+<div>
+  <h1>SELECT A TOPIC</h1>
+  <select id="select">
+    <option value="physics">physics</option>
+    <option value="maths">maths</option>
+    <option value="chemistry">chemistry</option>
+  </select>
+  <button type="button" id="submit" style="font-size: 20px;">Submit</button>
+</div>
+<script>
+const map = {
+    physics: 'physics url'
+ ,maths: 'maths url'
+ ,chemistry: 'chemistry url'
+}
+document.getElementById('submit').addEventListener('click', () =>
+  location.href = map[document.getElementById('select').value])
+</script>
+
+
+
+        -->
+        <hr>
+        <div>Show Most Recent Social Posts<br>
+            <button class='recent allsocial'> Load Blog Posts</button>
+        </div>
+        <br>
+        <div>Show Website Blog Posts<br>
+            <button class='recent weblog'> Load Blog Posts</button>
+        </div>
+        <br>
+        <div>Show Instagram Posts<br>
+            <button class='recent instagram'>Load IG Posts</button>
+        </div>
+        <br>
+        <div>Show FB Posts<br>
+            <button class='recent facebook'> Load FB Post</button>
+        </div>
+        <div id='genUpdates'>
+
+        </div>
+        <br>
+
+
+
+
+
+
+        <div class='post_scroll_div, pLoad_form' id="SocialHistory">
+            <div id='blogctrlButton' class='queryForm weblog'>
+                Recent:<br>
+
+                <button id='blogPQuery' class='blogQuery'>Load Web Posts</button>
+                <label for='bStartDate'>Start Date</label>
+                <input id='bStartDate' type='date' name='startDate'>
+                <label for='bEndDate'>End Date</label>
+                <input id='bEndDate' type='date' name='endDate'>
+                <!-- make default today's date
+             value=todays date in yyyy-mm-dd
+            -->
+            </div>
+            <div class='pArray' id='weblogResults'>
+
+            </div>
+            <br>
+            <div id='IGctrlButton' class='queryForm instagram'>
+
+                <button class='instagram'>Load IG Posts</button>
+                <label for='IGStartDate'>Start Date</label>
+                <input id='IGStartDate' type='date' name='startDate'>
+                <label for='IGEndDate'>End Date</label>
+                <input id='IGEndDate' type='date' name='endDate'>
+            </div>
+            <div id='instagramResults'>
+
+            </div>
+            <br>
+            <div id='FBctrlButton' class='queryForm facebook'>
+
+                <button class='facebook'>Load FB Posts</button>
+                <label for='FBStartDate'>Start Date</label>
+                <input id='FBStartDate' type='date' name='startDate'>
+                <label for='FBEndDate'>End Date</label>
+                <input id='FBEndDate' type='date' name='endDate'>
+            </div>
+            <div id='facebookResults'>
+
+            </div>
+            <br>
+            <hr>
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
